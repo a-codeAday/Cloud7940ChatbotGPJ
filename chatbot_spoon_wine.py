@@ -48,17 +48,18 @@ def strip_tags(html):
     stripper.feed(html)
     return stripper.get_data()
 
-global redis1
+
 
 def main():
     # Load your token and create an Updater for your Bot
     
     config = configparser.ConfigParser()
     config.read('config.ini')
-    updater = Updater(os.environ['ACCESS_TOKEN']), use_context=True)
+    updater = Updater(token=(config['TELEGRAM']['ACCESS_TOKEN']), use_context=True)
     dispatcher = updater.dispatcher
+    
 
-   
+
     # You can set this logging module, so you will know when and why things do not work as expected
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                         level=logging.INFO)
