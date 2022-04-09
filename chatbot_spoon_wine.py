@@ -53,11 +53,11 @@ def strip_tags(html):
     return stripper.get_data()
 
 global SPOON_KEY
-SPOON_KEY = api_key=os.environ['SPOONACULAR']['SPOON_KEY']
+SPOON_KEY = api_key=os.environ['SPOON_KEY']
 
 def main():
     # Load your token and create an Updater for your Bot
-    updater = Updater(token=(os.environ['TELEGRAM']['ACCESS_TOKEN']), use_context=True)
+    updater = Updater(token=(os.environ['ACCESS_TOKEN']), use_context=True)
     dispatcher = updater.dispatcher
 
 
