@@ -3,9 +3,13 @@ from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
 import os
+#read from config.ini
+#to be removed
 import configparser
-import logging
+config = configparser.ConfigParser()
+config.read('config.ini')
 
+import logging
 
 import random
 import connection
@@ -14,10 +18,10 @@ conn = connection.connect()
 mycursor = conn.cursor()
 
 from spoonacular import API
-SPOON_KEY='3ee7d67b42f94c428880b12b632e1177'
 
 from html.parser import HTMLParser
 from io import StringIO
+
 
 class HTMLStripper(HTMLParser):
     """Created by Eloff: https://stackoverflow.com/a/925630"""
@@ -48,16 +52,13 @@ def strip_tags(html):
     stripper.feed(html)
     return stripper.get_data()
 
-
+global SPOON_KEY
+SPOON_KEY = api_key=config['SPOONACULAR']['SPOON_KEY']
 
 def main():
     # Load your token and create an Updater for your Bot
-    
-    config = configparser.ConfigParser()
-    config.read('config.ini')
     updater = Updater(token=(config['TELEGRAM']['ACCESS_TOKEN']), use_context=True)
     dispatcher = updater.dispatcher
-    
 
 
     # You can set this logging module, so you will know when and why things do not work as expected
