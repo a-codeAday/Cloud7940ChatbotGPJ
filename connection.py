@@ -10,4 +10,4 @@ def connect():
                            user = os.environ['PYMYSQL_USER'],
                            password = os.environ['PYMYSQL_PASSWORD'],
                            database = os.environ['PYMYSQL_DB_NAME'],
-                           port = os.environ.getint('PYMYSQL_PORT'))
+                           port = os.environ['PYMYSQL_PORT'])
