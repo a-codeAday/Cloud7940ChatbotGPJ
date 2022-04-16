@@ -2,7 +2,7 @@ from cgi import print_exception
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
-
+import pymysql
 import os
 #read from config.ini
 #to be removed
@@ -13,9 +13,14 @@ config.read('config.ini')
 import logging
 
 import random
-import connection
+
 #create connection to mysqldb
-conn = connection.connect()
+conn = pymysql.connect(host = os.environ['PYMYSQL_HOST'],
+                           user = os.environ['PYMYSQL_USER'],
+                           password = os.environ['PYMYSQL_PASSWORD'],
+                           database = os.environ['PYMYSQL_DB_NAME'],
+                           port = int(os.environ['PYMYSQL_PORT']))
+
 mycursor = conn.cursor()
 
 from spoonacular import API
