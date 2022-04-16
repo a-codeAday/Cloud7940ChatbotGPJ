@@ -53,7 +53,7 @@ def strip_tags(html):
     return stripper.get_data()
 
 global SPOON_KEY
-SPOON_KEY = api_key=os.environ['SPOON_KEY']
+SPOON_KEY = os.environ['SPOON_KEY']
 
 def main():
     # Load your token and create an Updater for your Bot
