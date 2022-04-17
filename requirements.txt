@@ -3,3 +3,4 @@ configparser
 python-telegram-bot>=13.1
 spoonacular
 pymysql
+flask

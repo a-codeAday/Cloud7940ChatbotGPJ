@@ -1,14 +1,10 @@
 from cgi import print_exception
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
-
+from flask import Flask
+app = Flask(__name__)
 import pymysql
 import os
-#read from config.ini
-#to be removed
-import configparser
-config = configparser.ConfigParser()
-config.read('config.ini')
 
 import logging
 
@@ -61,7 +57,12 @@ def strip_tags(html):
 global SPOON_KEY
 SPOON_KEY = os.environ['SPOON_KEY']
 
+global keywordNotFound
+keywordNotFound = 'We cannot find recipe with your keyword, please try another one😋.'
+
+@app.route("/")
 def main():
+
     # Load your token and create an Updater for your Bot
     updater = Updater(token=(os.environ['ACCESS_TOKEN']), use_context=True)
     dispatcher = updater.dispatcher
@@ -81,7 +82,7 @@ def main():
     dispatcher.add_handler(CommandHandler("hungry",random_food_tg))
     dispatcher.add_handler(CommandHandler("thirsty",random_drink_tg))
     dispatcher.add_handler(CommandHandler("recipe",recipe_tg))
-    dispatcher.add_handler(CommandHandler("joke",joke))
+    dispatcher.add_handler(CommandHandler("start",start_command))
     dispatcher.add_handler(CommandHandler("pairWine",wine_pair_tg))
     dispatcher.add_handler(CommandHandler("pairDish",dish_wine_tg))
     dispatcher.add_handler(CommandHandler("joke",joke))
@@ -98,13 +99,17 @@ def echo(update, context):
     logging.info("context: " + str(context))
     context.bot.send_message(chat_id=update.effective_chat.id, text= reply_message)
 
+#greet user when first start bot
+def start_command(update: Update, context: CallbackContext) -> None:
+    """Send a message when the command /help is issued."""
+    update.message.reply_text('Hi there, welcome to use our chatbot. 👋 Our chatbot can give you some idea on food, wine and even jokes. 😋 Type /help to read more and enjoy🍜🧀🍕.')
+    
 
 # Define a few command handlers. These usually take the two arguments update and
 # context. Error handlers also receive the raised TelegramError object in error.
 def help_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
-    update.message.reply_text('Helping you helping you.\nType \n/wineExamples -Get some examples  of wine.\n/hungry -Get a random food recipe.\n/thirsty -Get a random drink recipe.\n/recipe (food ingredient) -Get a recipes with specified ingredients. \n/pairWine (dish food) -Get a Wine with specified food. \n/pairDish (dish wine) -Get ingredients with specified wine. \n/joke -Get a food joke. Funny!')
-    
+    update.message.reply_text('Try the commands below. Type \n 1. /wineExamples -Get some examples  of wine🥂.\n 2. /hungry -Get a random food recipe🍲.\n 3. /thirsty -Get a random drink recipe🥤.\n 4. /recipe (food ingredient) -Get a recipes with specified ingredients. \n 5. /pairWine (dish food) -Get a Wine with specified food. e.g. /pairWine Fish \n 6. /pairDish (dish wine) -Get ingredients with specified wine. e.g. /pairDish merlot. \n 7. /joke -Get a food joke😆!')
 def wineExamples_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
     update.message.reply_text('Here are some wines examples.\n -white_wine \n pinot_blanc \n greco \n riesling \n -red_wine \n marsala \n merlot \n dolcetto ')
@@ -174,12 +179,12 @@ def recipe_tg(update: Update, context: CallbackContext) -> None:
         update.message.reply_text('Ingredients: '+ '\n' + ingredient)
         update.message.reply_text('Steps: ' + '\n' + instruction)
     except (IndexError, ValueError):
-        update.message.reply_text('Usage: /recipe <kw>')
+        update.message.reply_text(keywordNotFound+'Usage: /recipe <kw>')
 
 def joke(update: Update, context: CallbackContext) -> None:
     try:
         sql = """SELECT joke FROM joke WHERE joke_id = %s"""  
-        randomJoke_id = random.randint(0, 11)
+        randomJoke_id = random.randint(1, 11)
         param = (randomJoke_id)
         
         # EXECUTE WITH PARAMS
@@ -220,7 +225,7 @@ def wine_pair_tg(update: Update, context: CallbackContext) -> None:
         update.message.reply_text('Price: '+ price)
 
     except (IndexError, ValueError):
-        update.message.reply_text('Usage: /WinePair <kw>')
+        update.message.reply_text(keywordNotFound+'Usage: /pairWine <kw>')
         
 def dish_wine_tg(update: Update, context: CallbackContext) -> None:
     try:
@@ -232,7 +237,7 @@ def dish_wine_tg(update: Update, context: CallbackContext) -> None:
         paired_dishes = response['text']
         update.message.reply_text('Pair Results: '+ paired_dishes)
     except (IndexError, ValueError):
-        update.message.reply_text('Usage: /DishPair <kw>')
+        update.message.reply_text(keywordNotFound+'Usage: /pairDish <kw>')
 
         
         
@@ -258,4 +263,4 @@ def video(update: Update, context: CallbackContext) -> None:
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /video')        
 if __name__ == '__main__':
-    main()
+    app.run(host=os.environ['HOST'], port=int(os.environ['PORT']))
