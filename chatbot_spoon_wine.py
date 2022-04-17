@@ -7,7 +7,6 @@ import pymysql
 import os
 
 import logging
-
 import random
 
 #create connection to mysqldb
@@ -262,5 +261,6 @@ def video(update: Update, context: CallbackContext) -> None:
         
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /video')        
+
 if __name__ == '__main__':
     app.run(host=os.environ['HOST'], port=int(os.environ['PORT']))
