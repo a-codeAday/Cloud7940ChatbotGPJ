@@ -109,7 +109,7 @@ def start_command(update: Update, context: CallbackContext) -> None:
 # context. Error handlers also receive the raised TelegramError object in error.
 def help_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
-    update.message.reply_text('Try the commands below. Type \n 1. /wineExamples -Get some examples  of wine🥂.\n 2. /hungry -Get a random food recipe🍲.\n 3. /thirsty -Get a random drink recipe🥤.\n 4. /recipe (food ingredient) -Get a recipes with specified ingredients. \n 5. /pairWine (dish food) -Get a Wine with specified food. e.g. /pairWine Fish \n 6. /pairDish (dish wine) -Get ingredients with specified wine. e.g. /pairDish merlot. \n 7. /joke -Get a food joke😆!')
+    update.message.reply_text('Try the commands below. Type \n 1. /wineExamples -Get some examples  of wine🥂.\n 2. /hungry -Get a random food recipe🍲.\n 3. /thirsty -Get a random drink recipe🥤.\n 4. /recipe (food ingredient) -Get a recipes with specified ingredients. \n 5. /pairWine (dish food) -Get a Wine with specified food. e.g. /pairWine Fish \n 6. /pairDish (dish wine) -Get ingredients with specified wine. e.g. /pairDish merlot. \n 7. /joke -Get a food joke😆! \n 8. /video (food ingredient) -Get a recipes with specified ingredients with photo and youtube link.')
 def wineExamples_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
     update.message.reply_text('Here are some wines examples.\n -white_wine \n pinot_blanc \n greco \n riesling \n -red_wine \n marsala \n merlot \n dolcetto ')
